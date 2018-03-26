@@ -1,3 +1,4 @@
+
 ![Logo](/logo.png)
 
 # 30秒的代码
@@ -577,7 +578,7 @@ array.filter()`删除其中的元素`FN`返回falsey值,`array.slice(-1)
 ```js
 const countBy = (arr, fn) =>
   arr.map(typeof fn === 'function' ? fn : val => val[fn]).reduce((acc, val, i) => {
-    acc[val] = (acc[val] ƜƜ 0) + 1;
+    acc[val] = (acc[val] || 0) + 1;
     return acc;
   }, {});
 ```
@@ -871,7 +872,7 @@ array.filter()`上`一个`只保留包含的值`b
 ```js
 const groupBy = (arr, fn) =>
   arr.map(typeof fn === 'function' ? fn : val => val[fn]).reduce((acc, val, i) => {
-    acc[val] = (acc[val] ƜƜ []).concat(arr[i]);
+    acc[val] = (acc[val] || []).concat(arr[i]);
     return acc;
   }, {});
 ```
@@ -1794,7 +1795,7 @@ window.location.href`获取当前网址. `⬆返回顶部`detectdevicetype`检�
 ```js
 const bottomVisible = () =>
   document.documentElement.clientHeight + window.scrollY >=
-  (document.documentElement.scrollHeight ƜƜ document.documentElement.clientHeight);
+  (document.documentElement.scrollHeight || document.documentElement.clientHeight);
 ```
 
 <details>
@@ -1885,14 +1886,14 @@ console.log(el.className); // 'container'
 const createEventHub = () => ({
   hub: Object.create(null),
   emit(event, data) {
-    (this.hub[event] ƜƜ []).forEach(handler => handler(data));
+    (this.hub[event] || []).forEach(handler => handler(data));
   },
   on(event, handler) {
     if (!this.hub[event]) this.hub[event] = [];
     this.hub[event].push(handler);
   },
   off(event, handler) {
-    const i = (this.hub[event] ƜƜ []).findIndex(h => h === handler);
+    const i = (this.hub[event] || []).findIndex(h => h === handler);
     if (i > -1) this.hub[event].splice(i, 1);
   }
 });
@@ -1953,7 +1954,7 @@ currentURL(); // 'https://google.com'
 
 ```js
 const detectDeviceType = () =>
-  /AndroidƜwebOSƜiPhoneƜiPadƜiPodƜBlackBerryƜIEMobileƜOpera Mini/i.test(navigator.userAgent)
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
     ? 'Mobile'
     : 'Desktop';
 ```
@@ -1980,8 +1981,8 @@ const elementIsVisibleInViewport = (el, partiallyVisible = false) => {
   const { top, left, bottom, right } = el.getBoundingClientRect();
   const { innerHeight, innerWidth } = window;
   return partiallyVisible
-    ? ((top > 0 && top < innerHeight) ƜƜ (bottom > 0 && bottom < innerHeight)) &&
-        ((left > 0 && left < innerWidth) ƜƜ (right > 0 && right < innerWidth))
+    ? ((top > 0 && top < innerHeight) || (bottom > 0 && bottom < innerHeight)) &&
+        ((left > 0 && left < innerWidth) || (right > 0 && right < innerWidth))
     : top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth;
 };
 ```
@@ -2141,7 +2142,7 @@ off(document.body, 'click', fn); // no longer logs '!' upon clicking on the page
 ```js
 const on = (el, evt, fn, opts = {}) => {
   const delegatorFn = e => e.target.matches(opts.target) && fn.call(e.target, e);
-  el.addEventListener(evt, opts.target ? delegatorFn : fn, opts.options ƜƜ false);
+  el.addEventListener(evt, opts.target ? delegatorFn : fn, opts.options || false);
   if (opts.target) return delegatorFn;
 };
 ```
@@ -2281,7 +2282,7 @@ getdaysdiffbetweendates
 
 ```js
 const scrollToTop = () => {
-  const c = document.documentElement.scrollTop ƜƜ document.body.scrollTop;
+  const c = document.documentElement.scrollTop || document.body.scrollTop;
   if (c > 0) {
     window.requestAnimationFrame(scrollToTop);
     window.scrollTo(0, c - c / 8);
@@ -2738,7 +2739,7 @@ async function sleepyWork() {
 
 K系数
 
-32. `⬆返回顶部`阶乘`计算一个数的阶乘. `使用递归.if`ñ`小于或等于
+32\. `⬆返回顶部`阶乘`计算一个数的阶乘. `使用递归.if`ñ`小于或等于
 
 ```js
 const average = (...nums) => [...nums].reduce((acc, val) => acc + val, 0) / nums.length;
@@ -2855,7 +2856,7 @@ const elo = ([...ratings], kFactor = 32, selfRating) => {
   const [a, b] = ratings;
   const expectedScore = (self, opponent) => 1 / (1 + 10 ** ((opponent - self) / 400));
   const newRating = (rating, i) =>
-    (selfRating ƜƜ rating) + kFactor * (i - expectedScore(i ? a : b, i ? b : a));
+    (selfRating || rating) + kFactor * (i - expectedScore(i ? a : b, i ? b : a));
   if (ratings.length === 2) {
     return [newRating(a, 1), newRating(b, 0)];
   } else {
@@ -3000,7 +3001,7 @@ geometricProgression(256, 1, 4); // [1, 4, 16, 64, 256]
 ⬆返回顶部`luhncheck`的执行情况`luhn算法`用于验证各种标识号码,例如信用卡号码,imei号码,国家提供商标识号码等. `使用`string.split( '')`,`array.reverse()
 
 ```js
-const hammingDistance = (num1, num2) => ((num1 ^ num2).toString(2).match(/1/g) ƜƜ '').length;
+const hammingDistance = (num1, num2) => ((num1 ^ num2).toString(2).match(/1/g) || '').length;
 ```
 
 <details>
@@ -3147,7 +3148,7 @@ const luhnCheck = num => {
     .reverse()
     .map(x => parseInt(x));
   let lastDigit = arr.splice(0, 1)[0];
-  let sum = arr.reduce((acc, val, i) => (i % 2 !== 0 ? acc + val : acc + (val * 2) % 9 ƜƜ 9), 0);
+  let sum = arr.reduce((acc, val, i) => (i % 2 !== 0 ? acc + val : acc + (val * 2) % 9 || 9), 0);
   sum += lastDigit;
   return sum % 10 === 0;
 };
@@ -3289,7 +3290,7 @@ const primes = num => {
   let arr = Array.from({ length: num - 1 }).map((x, i) => i + 2),
     sqroot = Math.floor(Math.sqrt(num)),
     numsTillSqroot = Array.from({ length: sqroot - 1 }).map((x, i) => i + 2);
-  numsTillSqroot.forEach(x => (arr = arr.filter(y => y % x !== 0 ƜƜ y == x)));
+  numsTillSqroot.forEach(x => (arr = arr.filter(y => y % x !== 0 || y == x)));
   return arr;
 };
 ```
@@ -3694,7 +3695,7 @@ invertkeyvalues
 反转对象的键值对,而不会突变它. `使用`object.keys()`和`array.reduce()`以反转对象的键值对. `⬆返回顶部
 
 ```js
-const untildify = str => str.replace(/^~($Ɯ\/Ɯ\\)/, `${require('os').homedir()}$1`);
+const untildify = str => str.replace(/^~($|\/|\\)/, `${require('os').homedir()}$1`);
 ```
 
 <details>
@@ -3778,8 +3779,8 @@ mapvalues`使用与提供的对象相同的键创建对象,并通过为每个值
 const equals = (a, b) => {
   if (a === b) return true;
   if (a instanceof Date && b instanceof Date) return a.getTime() === b.getTime();
-  if (!a ƜƜ !b ƜƜ (typeof a != 'object' && typeof b !== 'object')) return a === b;
-  if (a === null ƜƜ a === undefined ƜƜ b === null ƜƜ b === undefined) return false;
+  if (!a || !b || (typeof a != 'object' && typeof b !== 'object')) return a === b;
+  if (a === null || a === undefined || b === null || b === undefined) return false;
   if (a.prototype !== b.prototype) return false;
   let keys = Object.keys(a);
   if (keys.length !== Object.keys(b).length) return false;
@@ -4105,7 +4106,7 @@ const size = val =>
   Array.isArray(val)
     ? val.length
     : val && typeof val === 'object'
-      ? val.size ƜƜ val.length ƜƜ Object.keys(val).length
+      ? val.size || val.length || Object.keys(val).length
       : typeof val === 'string' ? new Blob([val]).size : 0;
 ```
 
@@ -4139,7 +4140,7 @@ const transform = (obj, fn, acc) => Object.keys(obj).reduce((a, k) => fn(a, obj[
 transform(
   { a: 1, b: 2, c: 1 },
   (r, v, k) => {
-    (r[v] ƜƜ (r[v] = [])).push(k);
+    (r[v] || (r[v] = [])).push(k);
     return r;
   },
   {}
@@ -4313,7 +4314,7 @@ const escapeHTML = str =>
         '>': '&gt;',
         "'": '&#39;',
         '"': '&quot;'
-      }[tag] ƜƜ tag)
+      }[tag] || tag)
   );
 ```
 
@@ -4335,7 +4336,7 @@ escapeHTML('<a href="#">Me & you</a>'); // '&lt;a href=&quot;#&quot;&gt;Me &amp;
 回报`真正`如果给定的字符串是回文,
 
 ```js
-const escapeRegExp = str => str.replace(/[.*+?^${}()Ɯ[\]\\]/g, '\\$&');
+const escapeRegExp = str => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 ```
 
 <details>
@@ -4609,7 +4610,7 @@ const toCamelCase = str => {
   let s =
     str &&
     str
-      .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*Ɯ\b)Ɯ[A-Z]?[a-z]+[0-9]*Ɯ[A-Z]Ɯ[0-9]+/g)
+      .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
       .map(x => x.slice(0, 1).toUpperCase() + x.slice(1).toLowerCase())
       .join('');
   return s.slice(0, 1).toLowerCase() + s.slice(1);
@@ -4640,7 +4641,7 @@ array.isarray()`检查一个值是否被分类为一个数组. `⬆返回顶部
 const toKebabCase = str =>
   str &&
   str
-    .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*Ɯ\b)Ɯ[A-Z]?[a-z]+[0-9]*Ɯ[A-Z]Ɯ[0-9]+/g)
+    .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
     .map(x => x.toLowerCase())
     .join('-');
 ```
@@ -4670,7 +4671,7 @@ toKebabCase('IAmListeningToFMWhileLoadingDifferentURLOnMyBrowserAndAlsoEditingSo
 const toSnakeCase = str =>
   str &&
   str
-    .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*Ɯ\b)Ɯ[A-Z]?[a-z]+[0-9]*Ɯ[A-Z]Ɯ[0-9]+/g)
+    .match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g)
     .map(x => x.toLowerCase())
     .join('_');
 ```
@@ -4721,7 +4722,7 @@ truncateString('boomerang', 7); // 'boom...'
 ```js
 const unescapeHTML = str =>
   str.replace(
-    /&amp;Ɯ&lt;Ɯ&gt;Ɯ&#39;Ɯ&quot;/g,
+    /&amp;|&lt;|&gt;|&#39;|&quot;/g,
     tag =>
       ({
         '&amp;': '&',
@@ -4729,7 +4730,7 @@ const unescapeHTML = str =>
         '&gt;': '>',
         '&#39;': "'",
         '&quot;': '"'
-      }[tag] ƜƜ tag)
+      }[tag] || tag)
   );
 ```
 
@@ -4962,7 +4963,7 @@ JSON.parse()来
 和a`试着抓`块来检查提供的参数是否是有效的json. `⬆返回顶部`🔧实用程序`cloneregexp`克隆一个正则表达式. `使用`新的正则表达式()
 
 ```js
-const isPrimitive = val => !['object', 'function'].includes(typeof val) ƜƜ val === null;
+const isPrimitive = val => !['object', 'function'].includes(typeof val) || val === null;
 ```
 
 <details>
@@ -4990,7 +4991,7 @@ array.find()`返回第一个非`空值`/`未定义`论据. `⬆返回顶部`coal
 ```js
 const isPromiseLike = obj =>
   obj !== null &&
-  (typeof obj === 'object' ƜƜ typeof obj === 'function') &&
+  (typeof obj === 'object' || typeof obj === 'function') &&
   typeof obj.then === 'function';
 ```
 
@@ -5057,7 +5058,7 @@ isSymbol(Symbol('x')); // true
 
 用于删除
 
-#`从字符串开始,因为它被添加一次. `⬆返回顶部`geturlparameters`返回一个包含当前url参数的对象. 
+\#`从字符串开始,因为它被添加一次. `⬆返回顶部`geturlparameters`返回一个包含当前url参数的对象. 
 
 ```js
 const isValidJSON = obj => {
@@ -5393,8 +5394,8 @@ validatenumber
 
 ```js
 const randomHexColorCode = () => {
-  let n = ((Math.random() * 0xfffff) Ɯ 0).toString(16);
-  return '#' + (n.length !== 6 ? ((Math.random() * 0xf) Ɯ 0).toString(16) + n : n);
+  let n = ((Math.random() * 0xfffff) | 0).toString(16);
+  return '#' + (n.length !== 6 ? ((Math.random() * 0xf) | 0).toString(16) + n : n);
 };
 ```
 
@@ -5557,7 +5558,7 @@ Omit the second argument, `def` to set the default answer as `no`.
 
 ```js
 const yesNo = (val, def = false) =>
-  /^(yƜyes)$/i.test(val) ? true : /^(nƜno)$/i.test(val) ? false : def;
+  /^(y|yes)$/i.test(val) ? true : /^(n|no)$/i.test(val) ? false : def;
 ```
 
 <details>
@@ -5576,9 +5577,9 @@ yesNo('Foo', true); // true
 
 ## Collaborators
 
-Ɯ [<img src="https://github.com/Chalarangelo.png" width="100px;"/>](https://github.com/Chalarangelo)<br/> [<sub>Angelos Chalaris</sub>](https://github.com/Chalarangelo)  Ɯ [<img src="https://github.com/Pl4gue.png" width="100px;"/>](https://github.com/Pl4gue)<br/> [<sub>David Wu</sub>](https://github.com/Pl4gue)                Ɯ [<img src="https://github.com/fejes713.png" width="100px;"/>](https://github.com/fejes713)<br/> [<sub>Stefan Feješ</sub>](https://github.com/fejes713) Ɯ [<img src="https://github.com/kingdavidmartins.png" width="100px;"/>](https://github.com/kingdavidmartins)<br/> [<sub>King David Martins</sub>](https://github.com/iamsoorena) Ɯ [<img src="https://github.com/iamsoorena.png" width="100px;"/>](https://github.com/iamsoorena)<br/> [<sub>Soorena Soleimani</sub>](https://github.com/iamsoorena) Ɯ
-Ɯ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- Ɯ ----------------------------------------------------------------------------------------------------------------------------------------------------------- Ɯ ------------------------------------------------------------------------------------------------------------------------------------------------------ Ɯ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ Ɯ ----------------------------------------------------------------------------------------------------------------------------------------------------------------- Ɯ
-Ɯ [<img src="https://github.com/elderhsouza.png" width="100px;"/>](https://github.com/elderhsouza)<br/> [<sub>Elder Henrique Souza</sub>](https://github.com/elderhsouza) Ɯ [<img src="https://github.com/skatcat31.png" width="100px;"/>](https://github.com/skatcat31)<br/> [<sub>Robert Mennell</sub>](https://github.com/skatcat31) Ɯ [<img src="https://github.com/atomiks.png" width="100px;"/>](https://github.com/atomiks)<br/> [<sub>atomiks</sub>](https://github.com/atomiks)         Ɯ                                                                                                                                                                                Ɯ                                                                                                                                                                   Ɯ
+| [<img src="https://github.com/Chalarangelo.png" width="100px;"/>](https://github.com/Chalarangelo)<br/> [<sub>Angelos Chalaris</sub>](https://github.com/Chalarangelo)  | [<img src="https://github.com/Pl4gue.png" width="100px;"/>](https://github.com/Pl4gue)<br/> [<sub>David Wu</sub>](https://github.com/Pl4gue)                | [<img src="https://github.com/fejes713.png" width="100px;"/>](https://github.com/fejes713)<br/> [<sub>Stefan Feješ</sub>](https://github.com/fejes713) | [<img src="https://github.com/kingdavidmartins.png" width="100px;"/>](https://github.com/kingdavidmartins)<br/> [<sub>King David Martins</sub>](https://github.com/iamsoorena) | [<img src="https://github.com/iamsoorena.png" width="100px;"/>](https://github.com/iamsoorena)<br/> [<sub>Soorena Soleimani</sub>](https://github.com/iamsoorena) |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [<img src="https://github.com/elderhsouza.png" width="100px;"/>](https://github.com/elderhsouza)<br/> [<sub>Elder Henrique Souza</sub>](https://github.com/elderhsouza) | [<img src="https://github.com/skatcat31.png" width="100px;"/>](https://github.com/skatcat31)<br/> [<sub>Robert Mennell</sub>](https://github.com/skatcat31) | [<img src="https://github.com/atomiks.png" width="100px;"/>](https://github.com/atomiks)<br/> [<sub>atomiks</sub>](https://github.com/atomiks)         |                                                                                                                                                                                |                                                                                                                                                                   |
 
 ## Credits
 
